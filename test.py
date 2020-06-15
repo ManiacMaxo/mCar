@@ -4,23 +4,29 @@ from gpiozero import DigitalOutputDevice, PWMOutputDevice
 
 
 class Car:
-    def __init__(self):
-        self.forw = DigitalOutputDevice(9)
-        self.back = DigitalOutputDevice(10)
-        self.left = DigitalOutputDevice(7)
-        self.right = DigitalOutputDevice(8)
+    def __init__(self, pwm=False):
+        self._pinClass = PWMOutputDevice if pwm else DigitalOutputDevice
+        self.forw = self._pinClass(9)
+        self.back = self._pinClass(10)
+        self.left = self._pinClass(7)
+        self.right = self._pinClass(8)
 
-    def forward(self, time=1):
+    def forward(self, time=1, speed=1):
+        if (self._pwm):
+            assert speed == 1 or speed == 0
+
         self.back.off()
         # assure that both pins aren't on at the same time
-        self.forw.on()
+        self.back.value(speed) if self._pwm else self.back.on()
         sleep(time)
         self.forw.off()
 
-    def backward(self, time=1):
+    def backward(self, time=1, speed=1):
+        if (self._pwm):
+            assert speed == 1 or speed == 0
         self.forw.off()
         # assure that both pins aren't on at the same time
-        self.back.on()
+        self.back.value(speed) if self._pwm else self.back.on()
         sleep(time)
         self.back.off()
 
@@ -39,42 +45,6 @@ class Car:
         self.right.off()
 
 
-class PWMCar:
-    def __init__(self):
-        self.forw = PWMOutputDevice(9)
-        self.back = PWMOutputDevice(10)
-        self.left = PWMOutputDevice(7)
-        self.right = PWMOutputDevice(9)
-
-    def forward(self, time=1, speed=1):
-        self.back.off()
-        # assure that both pins aren't on at the same time
-        self.forw.value(speed)
-        sleep(time)
-        self.forw.off()
-
-    def backward(self, time=1, speed=1):
-        self.forw.off()
-        # assure that both pins aren't on at the same time
-        self.back.value(speed)
-        sleep(time)
-        self.back.off()
-
-    def left(self, time=1, speed=1):
-        self.right.off()
-        # assure that both pins aren't on at the same time
-        self.left.value(speed)
-        sleep(time)
-        self.left.off()
-
-    def right(self, time=1, speed=1):
-        self.left.off()
-        # assure that both pins aren't on at the same time
-        self.right.value(speed)
-        sleep(time)
-        self.right.off()
-
-
 if __name__ == '__main__':
-    car = PWMCar()
-    car.forward(speed=0.5)
+    car = Car()
+    car.forward()
