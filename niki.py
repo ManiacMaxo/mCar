@@ -1,81 +1,32 @@
 #!/usr/bin/env python3
-from time import sleep
+# CamJam EduKit 3 - Robotics
+# Worksheet 7 - Controlling the motors with PWM
 
-from gpiozero import DigitalOutputDevice, PWMOutputDevice
+import time  # Import the Time library
+from gpiozero import CamJamKitRobot  # Import the GPIO Zero Library CamJam library
 
-
-class Car:
-    def __init__(self):
-        self.forw = DigitalOutputDevice(9)
-        self.back = DigitalOutputDevice(10)
-        self.left = DigitalOutputDevice(7)
-        self.right = DigitalOutputDevice(8)
-
-    def forward(self, time=1, speed=1):
-        self.back.off()
-        # assure that both pins aren't on at the same time
-        self.forw.value()
-        sleep(time)
-        self.forw.off()
-
-    def backward(self, time=1, speed=1):
-        self.forw.off()
-        # assure that both pins aren't on at the same time
-        self.back.value()
-        sleep(time)
-        self.back.off()
-
-    def left(self, time=1, speed=1):
-        self.right.off()
-        # assure that both pins aren't on at the same time
-        self.left.value()
-        sleep(time)
-        self.left.off()
-
-    def right(self, time=1, speed=1):
-        self.left.off()
-        # assure that both pins aren't on at the same time
-        self.right.value()
-        sleep(time)
-        self.right.off()
+robot = CamJamKitRobot()
 
 
-class PWMCar:
-    def __init__(self):
-        self.forw = PWMOutputDevice(9)
-        self.back = PWMOutputDevice(10)
-        self.left = PWMOutputDevice(7)
-        self.right = PWMOutputDevice(9)
+for i in range (10):
 
-    def forward(self, time=1, speed=1):
-        self.back.off()
-        # assure that both pins aren't on at the same time
-        self.forw.value(speed)
-        sleep(time)
-        self.forw.off()
+    # Set the relative speeds of the two motors, between 0.0 and 1.0
+    motorspeed = 0.1 * (i+1)
+    motorforward = (motorspeed, 0)
+    motorbackward = (-motorspeed, 0)
 
-    def backward(self, time=1, speed=1):
-        self.forw.off()
-        # assure that both pins aren't on at the same time
-        self.back.value(speed)
-        sleep(time)
-        self.back.off()
+    print("Forward", motorspeed);
+    robot.value = motorforward
+    time.sleep(1)
+    
+    print("Pause", motorspeed);
+    robot.stop()
+    time.sleep(1)
 
-    def left(self, time=1, speed=1):
-        self.right.off()
-        # assure that both pins aren't on at the same time
-        self.left.value(speed)
-        sleep(time)
-        self.left.off()
+    print("Backward", motorspeed);    
+    robot.value = motorbackward
+    time.sleep(1)  # Pause for 1 second
 
-    def right(self, time=1, speed=1):
-        self.left.off()
-        # assure that both pins aren't on at the same time
-        self.right.value(speed)
-        sleep(time)
-        self.right.off()
-
-
-if __name__ == '__main__':
-    car = Car()
-    car.forward(1)
+    print("Pause", motorspeed);    
+    robot.stop()
+    time.sleep(1)
