@@ -5,10 +5,10 @@ from gpiozero import DigitalOutputDevice, PWMOutputDevice
 
 class Car:
     def __init__(self):
-        self.forw = DigitalOutputDevice(7)
-        self.back = DigitalOutputDevice(8)
-        self.left = DigitalOutputDevice(9)
-        self.right = DigitalOutputDevice(10)
+        self.forw = DigitalOutputDevice(9)
+        self.back = DigitalOutputDevice(10)
+        self.left = DigitalOutputDevice(7)
+        self.right = DigitalOutputDevice(8)
 
     def forward(self, time=1, speed=1):
         self.back.off()
@@ -41,10 +41,10 @@ class Car:
 
 class PWMCar:
     def __init__(self):
-        self.forw = PWMOutputDevice(7)
-        self.back = PWMOutputDevice(8)
-        self.left = PWMOutputDevice(9)
-        self.right = PWMOutputDevice(10)
+        self.forw = PWMOutputDevice(9)
+        self.back = PWMOutputDevice(10)
+        self.left = PWMOutputDevice(7)
+        self.right = PWMOutputDevice(9)
 
     def forward(self, time=1, speed=1):
         self.back.off()
