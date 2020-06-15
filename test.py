@@ -13,7 +13,7 @@ class Car:
         self.right = pinClass(8)
 
     def forward(self, time=1, speed=1):
-        if (self._pwm):
+        if not self._pwm:
             assert speed == 1 or speed == 0
 
         self.back.off()
@@ -23,7 +23,7 @@ class Car:
         self.forw.off()
 
     def backward(self, time=1, speed=1):
-        if (self._pwm):
+        if not self._pwm:
             assert speed == 1 or speed == 0
         self.forw.off()
         # assure that both pins aren't on at the same time
@@ -47,5 +47,8 @@ class Car:
 
 
 if __name__ == '__main__':
-    car = Car()
-    car.forward()
+    #car = Car(True)
+    #car.forward(speed=0.5)
+    motor = PWMOutputDevice(9)
+    motor.value(True)
+    sleep(2)
