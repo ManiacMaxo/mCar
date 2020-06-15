@@ -3,30 +3,32 @@
 # Worksheet 7 - Controlling the motors with PWM
 
 import time  # Import the Time library
+import numpy as np
 from gpiozero import CamJamKitRobot  # Import the GPIO Zero Library CamJam library
 
 robot = CamJamKitRobot()
 
 
-for i in range (10):
+for motorspeed in np.arange(0.0, 1.0, 0.1):
 
     # Set the relative speeds of the two motors, between 0.0 and 1.0
-    motorspeed = 0.1 * (i+1)
     motorforward = (motorspeed, 0)
     motorbackward = (-motorspeed, 0)
 
-    print("Forward", motorspeed);
+    print("Motor Speed:", motorspeed);
+
+    print("Forward");
     robot.value = motorforward
     time.sleep(1)
     
-    print("Pause", motorspeed);
+    print("Pause");
     robot.stop()
     time.sleep(1)
 
-    print("Backward", motorspeed);    
+    print("Backward");
     robot.value = motorbackward
     time.sleep(1)  # Pause for 1 second
 
-    print("Pause", motorspeed);    
+    print("Pause\n");
     robot.stop()
     time.sleep(1)
