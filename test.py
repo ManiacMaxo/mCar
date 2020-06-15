@@ -5,11 +5,12 @@ from gpiozero import DigitalOutputDevice, PWMOutputDevice
 
 class Car:
     def __init__(self, pwm=False):
-        self._pinClass = PWMOutputDevice if pwm else DigitalOutputDevice
-        self.forw = self._pinClass(9)
-        self.back = self._pinClass(10)
-        self.left = self._pinClass(7)
-        self.right = self._pinClass(8)
+        pinClass = PWMOutputDevice if pwm else DigitalOutputDevice
+        self._pwm = pwm
+        self.forw = pinClass(9)
+        self.back = pinClass(10)
+        self.left = pinClass(7)
+        self.right = pinClass(8)
 
     def forward(self, time=1, speed=1):
         if (self._pwm):
