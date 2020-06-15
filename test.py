@@ -1,4 +1,3 @@
-#! bin/usr/env/python3
 from time import sleep
 
 from gpiozero import DigitalOutputDevice, PWMOutputDevice
