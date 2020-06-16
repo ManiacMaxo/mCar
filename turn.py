@@ -1,6 +1,6 @@
 from gpiozero import Motor
 
-__all__ = [Turn]
+__all__ = ['Turn']
 
 
 class Turn(Motor):

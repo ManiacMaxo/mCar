@@ -4,7 +4,7 @@ from turn import Turn
 
 
 class Car:
-    def __init__():
+    def __init__(self):
         self.drive_motor = Motor(9, 10)
         self.turn_motor = Turn(8, 7)
 
