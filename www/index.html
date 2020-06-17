@@ -1,58 +1,60 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>mcar joystick</title>
-		<style>
-		.square {
-			position: relative;
-			width: 50%;
-			border: 2px solid #9C9898;
-		}
-		.square:after {
-			content: "";
-			display: block;
-			padding-bottom: 100%;
-		}
-		.joystick {
-			position: absolute;
-			width: 100%;
-			height: 100%;
-		}
-		.coorinate {
-			float: left
-		}
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <title>mcar joystick</title>
+        <style>
+            .square {
+                position: relative;
+                width: 50%;
+                border: 2px solid #9c9898;
+            }
+            .square:after {
+                content: '';
+                display: block;
+                padding-bottom: 100%;
+            }
+            .joystick {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+            }
+            .coorinate {
+                float: left;
+            }
+        </style>
+        <script src="joy.min.js"></script>
+    </head>
+    <body>
+        <div class="square">
+            <div id="joydiv" class="joystick"></div>
+        </div>
+        <div class="coorinate">
+            X :<input id="X" type="text" class="form-control" />
+        </div>
+        <div class="coorinate">
+            Y :<input id="Y" type="text" class="form-control" />
+        </div>
+        <script type="text/javascript">
+            var joy = new JoyStick('joydiv')
+            var req = new XMLHttpRequest()
+            var currentX = 0
+            var currentY = 0
 
-		</style>
-		<script src="joy.min.js"></script>
-	</head>
-	<body>
-		<div class='square'>
-			<div id='joydiv' class='joystick'></div>
-		</div>
-		<div class='coorinate'>X :<input id="X" type="text" class="form-control" /></div>
-		<div class='coorinate'>Y :<input id="Y" type="text" class="form-control" /></div>
-		<script type="text/javascript">
-			var joy = new JoyStick('joydiv')
-			var req = new XMLHttpRequest();
-			var currentX = 0
-			var currentY = 0
-			
-			var x = document.getElementById("X")
-			var y = document.getElementById("Y")
-			
-			setInterval(function() {
-				x.value=joy.GetX()
-				y.value=joy.GetY()
-				if (x.value !== currentX || y.value !== currentY) {
-					currentX = x.value
-					currentY = y.value
-					req.open("GET", '/control/'+currentX+','+currentY)
-					req.send()
-				}
-			}, 50);
-		</script>
-	</body>
+            var x = document.getElementById('X')
+            var y = document.getElementById('Y')
+
+            setInterval(function () {
+                x.value = joy.GetX()
+                y.value = joy.GetY()
+                if (x.value !== currentX || y.value !== currentY) {
+                    currentX = x.value
+                    currentY = y.value
+                    req.open('GET', '/control/' + currentX + ',' + currentY)
+                    req.send()
+                }
+            }, 50)
+        </script>
+    </body>
 </html>
