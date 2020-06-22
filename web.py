@@ -4,7 +4,8 @@ import argparse
 import logging
 import os
 
-from bottle import default_app, route, static_file
+from bottle import default_app, get, route, static_file
+
 from car import Car
 
 
@@ -19,9 +20,9 @@ def index():
     return static_file('index.html', root='www')
 
 
-@route('/joy.min.js')
-def index():
-    return static_file('joy.min.js', root='www')
+@get('/<filename>')
+def all(filename):
+    return static_file(filename, root='www')
 
 
 if __name__ == '__main__':
@@ -29,14 +30,20 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     # Server settings
-    parser.add_argument(
-        '-i', '--host', default=os.getenv('IP', '0.0.0.0'), help='IP Address')
-    parser.add_argument(
-        '-p', '--port', default=os.getenv('PORT', 80), help='Port')
+    parser.add_argument('-i',
+                        '--host',
+                        default=os.getenv('IP', '0.0.0.0'),
+                        help='IP Address')
+    parser.add_argument('-p',
+                        '--port',
+                        default=os.getenv('PORT', 80),
+                        help='Port')
 
     # Verbose mode
-    parser.add_argument('--verbose', '-v',
-                        help='increase output verbosity', action='store_true')
+    parser.add_argument('--verbose',
+                        '-v',
+                        help='increase output verbosity',
+                        action='store_true')
     args = parser.parse_args()
 
     if args.verbose:
