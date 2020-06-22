@@ -3,11 +3,8 @@
 import argparse
 import logging
 import os
-import subprocess
-import time
 
 from bottle import default_app, route, static_file
-
 from car import Car
 
 
