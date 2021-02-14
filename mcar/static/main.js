@@ -17,7 +17,7 @@ const joystick = nipplejs.create({
 
 joystick.on('move', () => {
     const { x, y } = joystick[0].frontPosition
-    socket.emit('control', -x.map(0, 100, 0, 1), -y.map(0, 100, 0, 1))
+    socket.emit('control', -x.map(-100, 100, -1, 1), -y.map(-100, 100, -1, 1))
 })
 
 joystick.on('end', () => {
