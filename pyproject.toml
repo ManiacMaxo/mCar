@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "mcar"
+version = "0.1.0"
+description = ""
+authors = ["Victor Gorchilov <victor@gorchilov.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+Flask = "^1.1.2"
+Flask-SocketIO = "^5.0.1"
+
+[tool.poetry.dev-dependencies]
+yapf = "^0.30.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = "mcar.server:start"

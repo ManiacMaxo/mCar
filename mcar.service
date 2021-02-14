@@ -3,7 +3,7 @@ Description=mcar remote control
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/python3 -u web.py
+ExecStart=/home/victorgorchilov/.local/bin/poetry run -u server.py
 WorkingDirectory=/z/mcar
 StandardOutput=inherit
 StandardError=inherit
