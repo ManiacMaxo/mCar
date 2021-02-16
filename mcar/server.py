@@ -1,7 +1,7 @@
 from flask import Flask, redirect, render_template, request
 from flask_socketio import SocketIO, emit, send
 
-from mcar.Car import Car
+from mcar.utils import Car, stream
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -11,6 +11,11 @@ car = Car()
 @app.route('/')
 def main():
     return render_template('index.html')
+
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 @socketio.on('connection')

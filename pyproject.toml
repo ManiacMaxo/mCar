@@ -6,12 +6,13 @@ authors = ["Victor Gorchilov <victor@gorchilov.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = "^3.7"
 Flask = "^1.1.2"
 Flask-SocketIO = "^5.0.1"
 gpiozero = "^1.5.1"
 gpio = "^0.3.0"
 "RPi.GPIO" = "^0.7.0"
+picamera = {extras = ["arra"], version = "^1.13"}
 
 [tool.poetry.dev-dependencies]
 yapf = "^0.30.0"

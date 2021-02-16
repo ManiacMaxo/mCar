@@ -1,3 +1,6 @@
+const size = Math.min(window.innerWidth * 0.8, 200)
+const radius = parseInt(size / 2)
+
 const socket = io()
 socket.on('connect', () => {
     socket.emit('connection', { data: "I'm connected!" })
@@ -12,12 +15,12 @@ const joystick = nipplejs.create({
     color: 'blue',
     mode: 'static',
     position: { left: '50%', top: '50%' },
-    size: 200,
+    size
 })
 
 joystick.on('move', () => {
     const { x, y } = joystick[0].frontPosition
-    socket.emit('control', -x.map(-100, 100, -1, 1), -y.map(-100, 100, -1, 1))
+    socket.emit('control', -x.map(-radius, radius, -1, 1), -y.map(-radius, radius, -1, 1))
 })
 
 joystick.on('end', () => {
