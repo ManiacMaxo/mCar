@@ -6,7 +6,6 @@ camera = cv2.VideoCapture(0)
 def stream():
     while True:
         success, frame = camera.read()  # read the camera frame
-        frame = cv2.flip(frame, -1)
         if not success:
             break
         _, buffer = cv2.imencode(".jpg", frame)

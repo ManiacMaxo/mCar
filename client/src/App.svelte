@@ -25,5 +25,6 @@
     .video-feed {
         height: 400px;
         aspect-ratio: 4 / 3;
+        max-width: 100%;
     }
 </style>

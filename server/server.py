@@ -4,7 +4,7 @@ from flask_socketio import SocketIO, emit
 from utils import Car, stream
 
 app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", logger=False, engineio_logger=False)
 car = Car()
 
 
@@ -23,23 +23,27 @@ def wildcard(path):
     return send_from_directory("../client/public", path)
 
 
-@socketio.on("connection")
-def handle_connection(data):
+@socketio.event
+def connection(data):
     print("connection established")
     emit("acknowledge")
 
 
-@socketio.on("control")
-def handle_control(x, y):
-    print(x, y)
+@socketio.event
+def control(x, y):
+    print(f"control event x: {x}, y: {y}")
     car.drive(x, y)
 
 
-@socketio.on("stop")
-def handle_stop():
-    print("stop")
+@socketio.event
+def stop():
+    print("stop event")
     car.stop()
 
 
+def start(host="0.0.0.0", port="3000"):
+    socketio.run(app, host=host, port=port)
+
+
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port="3000")
+    start()
