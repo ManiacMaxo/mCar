@@ -1,15 +1,16 @@
 <script>
     import io from 'socket.io-client'
     import Joystick from './Joytstick.svelte'
-    const socket = io()
 
-    socket.on('connect', () => {
-        socket.emit('connection', { data: "I'm connected!" })
-    })
+    const socket = io('192.168.2.120:3000')
 </script>
 
 <main>
-    <img class="video-feed" src="/api/video_feed" alt="video feed" />
+    <img
+        class="video-feed"
+        src="http://192.168.2.120:3000/api/video_feed"
+        alt="video feed"
+    />
     <Joystick {socket} />
 </main>
 

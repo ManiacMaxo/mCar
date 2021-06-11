@@ -11,7 +11,7 @@
     }
 
     const size = Math.min(window.innerWidth * 0.8, 200)
-    const radius = parseInt(size / 2)
+    const radius = (size / 2).toFixed()
 
     const joystick = nipplejs.create({
         create: document.querySelector('#joystick'),
@@ -24,11 +24,11 @@
 
     joystick.on('move', () => {
         const { x, y } = joystick[0].frontPosition
-        socket.emit(
-            'control',
-            -x.map(-radius, radius, -1, 1),
-            -y.map(-radius, radius, -1, 1)
-        )
+
+        const rotation = x.map(-radius, radius, -1, 1)
+        const speed = -y.map(-radius, radius, -1, 1)
+
+        socket.emit('control', rotation, speed)
     })
 
     joystick.on('end', () => {
