@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from flask import Flask, Response, send_from_directory
 from flask_socketio import SocketIO, emit
 
