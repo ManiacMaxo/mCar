@@ -1,40 +1,40 @@
-from flask import Flask, redirect, render_template, request
-from flask_socketio import SocketIO, emit, send
+from flask import Flask, render_template, Response
+from flask_socketio import SocketIO, emit
 
-from mcar.utils import Car, stream
+from utils import Car, stream
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 car = Car()
 
 
-@app.route('/')
+@app.route("/")
 def main():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/video_feed')
+@app.route("/video_feed")
 def video_feed():
-    return Response(stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(stream(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
 
-@socketio.on('connection')
+@socketio.on("connection")
 def handle_connection(data):
-    print('connection established')
-    emit('acknowledge')
+    print("connection established")
+    emit("acknowledge")
 
 
-@socketio.on('control')
+@socketio.on("control")
 def handle_control(x, y):
     print(x, y)
     car.drive(x, y)
 
 
-@socketio.on('stop')
+@socketio.on("stop")
 def handle_stop():
-    print('stop')
+    print("stop")
     car.stop()
 
 
-def start():
-    socketio.run(app, host='0.0.0.0', port='3000')
+if __name__ == "__main__":
+    socketio.run(app, host="0.0.0.0", port="3000")

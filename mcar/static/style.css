@@ -2,11 +2,17 @@
     box-sizing: border-box;
 }
 
-.wrapper {
-    display: none;
+body {
+    min-height: calc(100vh - 400px);
+}
+
+.video-feed {
+    height: 400px;
+}
+
+#wrapper {
     position: absolute;
     width: 100%;
     height: 100%;
     left: 0;
-  }
-  
+}
