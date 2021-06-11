@@ -1,4 +1,4 @@
-from flask import Flask, Response, render_template, send_from_directory
+from flask import Flask, Response, send_from_directory
 from flask_socketio import SocketIO, emit
 
 from utils import Car, stream
