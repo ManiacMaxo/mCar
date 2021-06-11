@@ -9,7 +9,7 @@
 </script>
 
 <main>
-    <img class="video-feed" src="/video-feed" alt="video feed" />
+    <img class="video-feed" src="/api/video_feed" alt="video feed" />
     <Joystick {socket} />
 </main>
 
@@ -24,6 +24,6 @@
 
     .video-feed {
         height: 400px;
-        aspect-ratio: 16 / 10;
+        aspect-ratio: 4 / 3;
     }
 </style>

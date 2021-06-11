@@ -17,7 +17,7 @@
         create: document.querySelector('#joystick'),
         color: 'blue',
         mode: 'static',
-        // position: { left: '50%', top: '50%' },
+        position: { left: '50%', top: '70%' },
         dynamicPage: true,
         size,
     })

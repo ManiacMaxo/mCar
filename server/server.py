@@ -1,21 +1,26 @@
-from flask import Flask, render_template, Response
+from flask import Flask, Response, render_template, send_from_directory
 from flask_socketio import SocketIO, emit
 
 from utils import Car, stream
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")
 car = Car()
 
 
 @app.route("/")
 def main():
-    return render_template("index.html")
+    return send_from_directory("../client/public", "index.html")
 
 
-@app.route("/video_feed")
+@app.route("/api/video_feed")
 def video_feed():
     return Response(stream(), mimetype="multipart/x-mixed-replace; boundary=frame")
+
+
+@app.route("/<path:path>")
+def wildcard(path):
+    return send_from_directory("../client/public", path)
 
 
 @socketio.on("connection")
