@@ -1,50 +1,23 @@
 #!/usr/bin/env python3
-from flask import Flask, Response, send_from_directory
-from flask_socketio import SocketIO, emit
+from pathlib import Path
 
-from utils import Car, stream
+from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi_socketio import SocketManager
 
-app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*", logger=False, engineio_logger=False)
-car = Car()
+from utils import stream
 
-
-@app.route("/")
-def main():
-    return send_from_directory("../client/public", "index.html")
+app = FastAPI()
+socket_manager = SocketManager(app=app)
 
 
-@app.route("/api/video_feed")
+static_path = Path(__file__).parent / "client/public"
+app.mount("/", StaticFiles(directory=static_path), name="static")
+
+
+@app.get("/api/video_feed")
 def video_feed():
-    return Response(stream(), mimetype="multipart/x-mixed-replace; boundary=frame")
-
-
-@app.route("/<path:path>")
-def wildcard(path):
-    return send_from_directory("../client/public", path)
-
-
-@socketio.event
-def connection(data):
-    print("connection established")
-    emit("acknowledge")
-
-
-@socketio.event
-def control(x, y):
-    print(f"control event x: {x}, y: {y}")
-    car.drive(x, y)
-
-
-@socketio.event
-def stop():
-    print("stop event")
-    car.stop()
-
-
-def start(host="0.0.0.0", port="3000"):
-    socketio.run(app, host=host, port=port)
-
-
-if __name__ == "__main__":
-    start()
+    return StreamingResponse(
+        content=stream(), media_type="multipart/x-mixed-replace; boundary=frame"
+    )

@@ -26,6 +26,10 @@ is_running() {
     [ -f "$pid_file" ] && ps -p `get_pid` > /dev/null 2>&1
 }
 
+if [ ! -d /var/log/$name ]; then
+    mkdir -p "/var/log/$name"
+fi
+
 case "$1" in
     start)
     if is_running; then

@@ -130,3 +130,8 @@ dmypy.json
 
 .vscode/
 .DS_STORE
+
+
+# Added by cargo
+
+/target

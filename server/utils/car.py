@@ -1,5 +1,6 @@
 from gpiozero import Motor
 
+
 class Car:
     def __init__(self):
         self.drive_motor = Motor(9, 10)
@@ -18,8 +19,8 @@ class Car:
         self.turn_motor.backward(value)
 
     def drive(self, x, y):
-        x = min(max(-1, x), 1) # cap X between -1 and 1
-        y = min(max(-1, y), 1) # cap Y between -1 and 1
+        x = min(max(-1, x), 1)  # cap X between -1 and 1
+        y = min(max(-1, y), 1)  # cap Y between -1 and 1
         if y > 0:
             self.forward(y)
         else:
@@ -33,3 +34,6 @@ class Car:
     def stop(self):
         self.drive_motor.stop()
         self.turn_motor.stop()
+
+
+car = Car()

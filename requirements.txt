@@ -1,0 +1,8 @@
+fastapi
+python-socketio
+
+gpiozero
+gpio
+RPi.GPIO
+
+opencv-python-headless
