@@ -1,12 +1,12 @@
 <script>
     import io from 'socket.io-client'
-    import Joystick from './Joytstick.svelte'
+    import Joystick from './lib/Joytstick.svelte'
 
     const socket = io('/ws')
 </script>
 
 <main>
-    <img class="video-feed" src="/api/video_feed" alt="video feed" />
+    <img class="video-feed" src="/api/feed" alt="video feed" />
     <Joystick {socket} />
 </main>
 

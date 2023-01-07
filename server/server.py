@@ -16,7 +16,7 @@ static_path = Path(__file__).parent / "client/public"
 app.mount("/", StaticFiles(directory=static_path), name="static")
 
 
-@app.get("/api/video_feed")
+@app.get("/api/feed")
 def video_feed():
     return StreamingResponse(
         content=stream(), media_type="multipart/x-mixed-replace; boundary=frame"
