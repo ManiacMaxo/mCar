@@ -1,8 +1,8 @@
 <script lang="ts">
     import nipplejs from 'nipplejs'
-    import type { Socket } from 'socket.io-client'
+    import { onMount } from 'svelte'
 
-    export let socket: Socket
+    export let socket: WebSocket
 
     const mapNumber = (
         num: number,
@@ -16,26 +16,34 @@
     const radius = Math.floor(size / 2)
 
     let joystickElement: HTMLElement
-    const joystick = nipplejs.create({
-        zone: joystickElement,
-        color: 'blue',
-        mode: 'static',
-        position: { left: '50%', top: '70%' },
-        dynamicPage: true,
-        size
-    })
 
-    joystick.on('move', () => {
-        const { x, y } = joystick[0].frontPosition
+    onMount(() => {
+        const joystick = nipplejs.create({
+            zone: joystickElement,
+            color: 'blue',
+            mode: 'static',
+            position: { left: '50%', top: '70%' },
+            dynamicPage: true,
+            size
+        })
 
-        const rotation = mapNumber(x, -radius, radius, -1, 1)
-        const speed = mapNumber(-y, -radius, radius, -1, 1)
+        joystick.on('move', (ev) => {
+            const { x, y } = ev.target.nipples[0].frontPosition
 
-        socket.emit('control', rotation, speed)
-    })
+            const rotation = mapNumber(x, -radius, radius, -1, 1)
+            const speed = mapNumber(-y, -radius, radius, -1, 1)
 
-    joystick.on('end', () => {
-        socket.emit('stop')
+            socket.send(
+                JSON.stringify({
+                    event: 'control',
+                    data: { x: rotation, y: speed }
+                })
+            )
+        })
+
+        joystick.on('end', () => {
+            socket.send(JSON.stringify({ event: 'stop' }))
+        })
     })
 </script>
 

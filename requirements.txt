@@ -1,7 +1,9 @@
 fastapi
-python-socketio
+websockets
+uvicorn
 
 gpiozero
 gpio
+RPI.GPIO
 
 opencv-python-headless

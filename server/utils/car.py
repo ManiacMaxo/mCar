@@ -1,4 +1,18 @@
-from gpiozero import Motor
+import warnings
+
+try:
+    from gpiozero import Device
+
+    warnings.filterwarnings("ignore")
+    Device._default_pin_factory()
+except:
+    from .motor import DummyMotor
+
+    Motor = DummyMotor
+else:
+    from gpiozero import Motor
+
+    warnings.resetwarnings()
 
 
 class Car:

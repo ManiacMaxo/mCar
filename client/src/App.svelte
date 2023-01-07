@@ -1,8 +1,12 @@
 <script>
-    import io from 'socket.io-client'
     import Joystick from './lib/Joytstick.svelte'
 
-    const socket = io('/ws')
+    const getSocketUrl = () => {
+        const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
+        return `${protocol}://${window.location.host}`
+    }
+
+    const socket = new WebSocket(getSocketUrl())
 </script>
 
 <main>

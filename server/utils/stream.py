@@ -8,7 +8,10 @@ def stream():
         success, frame = camera.read()  # read the camera frame
         if not success:
             break
-        _, buffer = cv2.imencode(".jpg", frame)
+        flag, buffer = cv2.imencode(".jpg", frame)
+
+        if not flag:
+            continue
         frame = buffer.tobytes()
         yield (
             b"--frame\r\n" b"Content-Type: image/jpeg\r\n\r\n" + frame + b"\r\n"
