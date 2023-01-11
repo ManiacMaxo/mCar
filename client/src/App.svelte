@@ -3,14 +3,15 @@
 
     const getSocketUrl = () => {
         const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
-        return `${protocol}://${window.location.host}`
+        return `${protocol}://${window.location.host}/control`
     }
 
     const socket = new WebSocket(getSocketUrl())
 </script>
 
 <main>
-    <img class="video-feed" src="/api/feed" alt="video feed" />
+    <!-- svelte-ignore a11y-media-has-caption -->
+    <video class="video-feed" src="/api/feed" autoplay />
     <Joystick {socket} />
 </main>
 
