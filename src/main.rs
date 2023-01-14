@@ -1,14 +1,22 @@
+use std::sync::Arc;
 use warp::Filter;
 
+pub mod car;
 pub mod web;
+use car::Car;
 
 #[tokio::main]
 async fn main() {
-    // let car = Car();
+    let car_instance = Arc::new(Car::new());
+    let car = warp::any().map(move || car_instance.clone());
 
-    let control = warp::path("control")
-        .and(warp::ws())
-        .map(|ws: warp::ws::Ws| ws.on_upgrade(move |socket| web::handle_socket(socket)));
+    let control =
+        warp::path("control")
+            .and(warp::ws())
+            .and(car)
+            .map(|ws: warp::ws::Ws, car: Arc<Car>| {
+                ws.on_upgrade(move |socket| web::handle_socket(socket, car))
+            });
 
     let index = warp::path::end().and(warp::fs::file("client/dist/index.html"));
     let public = index
