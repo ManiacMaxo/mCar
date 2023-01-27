@@ -1,0 +1,17 @@
+ARG NUM_CPUS=4
+ARG CROSS_BASE_IMAGE
+FROM $CROSS_BASE_IMAGE
+
+RUN DEBIAN_FRONTEND=noninteractive apt install -y llvm-dev libclang-3.9-dev clang-3.9 
+
+# cross compile opencv, see https://docs.opencv.org/4.x/d0/d76/tutorial_arm_crosscompile_with_cmake.html
+RUN DEBIAN_FRONTEND=noninteractive apt install -y gcc-arm-linux-gnueabihf git build-essential cmake
+RUN git clone --depth 1 https://github.com/opencv/opencv.git && \
+    cd opencv/platforms/linux && \
+    mkdir build && \
+    cd build && \
+    cmake -DCMAKE_TOOLCHAIN_FILE=../arm-gnueabi.toolchain.cmake ../../.. && \
+    make -j $(($NUM_CPUS+1)) && \
+    make install
+
+ENV CMAKE_PREFIX_PATH="/opencv/platforms/linux/build/install"
