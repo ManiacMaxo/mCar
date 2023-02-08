@@ -23,6 +23,6 @@ async fn main() {
         .or(warp::fs::dir("./resources"))
         .with(warp::compression::gzip());
 
-    let routes = public/* .or(control) */;
+    let routes = public.or(control);
     warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
 }
