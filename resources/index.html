@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/ico" href="favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mCar</title>
+
+    <style>
+      main {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .video-feed {
+        height: 400px;
+        aspect-ratio: 4 / 3;
+        max-width: 100%;
+      }
+
+      #joystick {
+        position: relative;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <video class="video-feed" src="/api/feed" autoplay></video>
+      <div id="joystick"></div>
+    </main>
+    <script src="nipplejs.min.js"></script>
+    <script defer src="joystick.js"></script>
+  </body>
+</html>

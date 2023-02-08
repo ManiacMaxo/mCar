@@ -18,11 +18,11 @@ async fn main() {
                 ws.on_upgrade(move |socket| web::handle_socket(socket, car))
             });
 
-    let index = warp::path::end().and(warp::fs::file("client/dist/index.html"));
+    let index = warp::path::end().and(warp::fs::file("resources/index.html"));
     let public = index
-        .or(warp::fs::dir("./client/dist/"))
+        .or(warp::fs::dir("./resources"))
         .with(warp::compression::gzip());
 
-    let routes = public.or(control);
+    let routes = public/* .or(control) */;
     warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
 }
