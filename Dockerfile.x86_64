@@ -1,0 +1,31 @@
+FROM ghcr.io/cross-rs/armv7-unknown-linux-gnueabihf:latest as opencv-builder
+
+RUN apt install -y --no-install-recommends \
+    ninja-build libclang-dev clang \
+    ffmpeg libavcodec-dev libavformat-dev libswscale-dev \
+    git build-essential cmake gcc-arm-linux-gnueabihf && \
+    update-alternatives --set c++ /usr/bin/clang++ && \
+    update-alternatives --set cc /usr/bin/clang
+
+# also change OPENCV_LINK_LIBS to opencv_world{version_without_dot} when changing version
+RUN git clone --depth 1 --branch 4.7.0 https://github.com/opencv/opencv.git /opencv
+RUN mkdir /opencv/build
+WORKDIR /opencv/build
+
+# cross compile opencv, see https://docs.opencv.org/4.x/d0/d76/tutorial_arm_crosscompile_with_cmake.html
+RUN cmake -GNinja \
+    -DOPENCV_GENERATE_PKGCONFIG=YES \
+    -DCMAKE_TOOLCHAIN_FILE=/opencv/platforms/linux/arm-gnueabi.toolchain.cmake \
+    /opencv && \
+    ninja && ninja install
+
+FROM ghcr.io/cross-rs/armv7-unknown-linux-gnueabihf:latest as builder
+
+ENV OPENCV_INCLUDE_PATHS=/opt/opencv/include
+ENV OPENCV_LINK_PATHS=/opt/opencv/lib
+ENV OPENCV_LINK_LIBS=opencv_world470
+ENV OPENCV_DISABLE_PROBES=pkg_config,cmake,vcpkg_cmake,vcpkg
+
+RUN mkdir -p /opt/opencv
+COPY --from=opencv-builder /usr/local/include/opencv4 /opt/opencv/include
+COPY --from=opencv-builder /opencv/build/lib /opt/opencv/lib
