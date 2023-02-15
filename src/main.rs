@@ -1,8 +1,9 @@
 use std::sync::Arc;
 use warp::Filter;
 
-pub mod car;
 pub mod web;
+mod car;
+
 use car::Car;
 
 #[tokio::main]

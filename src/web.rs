@@ -57,7 +57,7 @@ async fn handle_data(data: Value, car: &Arc<Car>) {
             }
             let x = data["x"].as_f64().unwrap();
             let y = data["y"].as_f64().unwrap();
-            car.drive(x as f32, y as f32);
+            car.drive(x, y);
         }
         Some("stop") => {
             car.stop();

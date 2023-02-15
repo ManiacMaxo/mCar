@@ -1,8 +1,11 @@
-use rust_gpiozero::Motor;
 use std::sync::{
     atomic::{AtomicBool, Ordering},
     Arc, Mutex,
 };
+
+mod motor;
+use motor::Motor;
+
 pub struct Car {
     drive_motor: Arc<Mutex<Motor>>,
     turn_motor: Arc<Mutex<Motor>>,
@@ -18,28 +21,26 @@ impl Car {
         }
     }
 
-    pub fn drive(&self, x: f32, y: f32) {
+    pub fn drive(&self, x: f64, y: f64) {
         let capped_x = x.max(-1.0).min(1.0);
         let capped_y = y.max(-1.0).min(1.0);
 
         let drive_motor = self.drive_motor.clone();
         let mut drive_motor = drive_motor.lock().unwrap();
-        drive_motor.set_speed(capped_y.abs().into());
 
         if capped_y > 0.0 {
-            drive_motor.forward();
+            drive_motor.forward(capped_y);
         } else {
-            drive_motor.backward();
+            drive_motor.backward(-capped_y);
         }
 
         let turn_motor = self.turn_motor.clone();
         let mut turn_motor = turn_motor.lock().unwrap();
-        turn_motor.set_speed(capped_x.abs().into());
 
         if capped_x > 0.0 {
-            turn_motor.forward();
+            turn_motor.forward(capped_x);
         } else {
-            turn_motor.backward();
+            turn_motor.backward(-capped_x);
         }
     }
 
