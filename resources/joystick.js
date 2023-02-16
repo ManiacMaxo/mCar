@@ -41,6 +41,6 @@ joystick.on("end", () => {
   socket.send(JSON.stringify({ event: "stop" }));
 });
 
-socket.on("message", (message) => {
-  console.log("Message from server: ", message);
+socket.addEventListener("message", (event) => {
+  console.log("Message from server: ", event.data);
 });

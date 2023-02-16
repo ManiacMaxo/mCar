@@ -82,6 +82,12 @@ pub struct Motor {
     devices: MotorCompositeDevice,
 }
 
+pub trait GenericMotor {
+    fn forward(&mut self, speed: f64);
+    fn backward(&mut self, speed: f64);
+    fn stop(&mut self);
+}
+
 impl Motor {
     pub fn new(forward_pin: u8, backward_pin: u8) -> Motor {
         let forward = PWMOutputDevice::new(forward_pin);
@@ -90,8 +96,10 @@ impl Motor {
             devices: MotorCompositeDevice(forward, backward),
         }
     }
+}
 
-    pub fn forward(&mut self, speed: f64) {
+impl GenericMotor for Motor {
+    fn forward(&mut self, speed: f64) {
         if !(speed >= 0.0 && speed <= 1.0) {
             println!("Speed must be between 0.0 and 1.0");
             return;
@@ -101,7 +109,7 @@ impl Motor {
         self.devices.0.set_value(speed);
     }
 
-    pub fn backward(&mut self, speed: f64) {
+    fn backward(&mut self, speed: f64) {
         if !(speed >= 0.0 && speed <= 1.0) {
             println!("Speed must be between 0.0 and 1.0");
             return;
@@ -111,8 +119,24 @@ impl Motor {
         self.devices.1.set_value(speed);
     }
 
-    pub fn stop(&mut self) {
+    fn stop(&mut self) {
         self.devices.0.set_value(0.0);
         self.devices.1.set_value(0.0);
     }
+}
+
+pub struct DummyMotor {}
+
+impl DummyMotor {
+    pub fn new() -> DummyMotor {
+        return DummyMotor {};
+    }
+}
+
+impl GenericMotor for DummyMotor {
+    fn forward(&mut self, speed: f64) {}
+
+    fn backward(&mut self, speed: f64) {}
+
+    fn stop(&mut self) {}
 }

@@ -1,23 +1,35 @@
-use std::sync::{
-    atomic::{AtomicBool, Ordering},
-    Arc, Mutex,
+use std::{
+    panic::catch_unwind,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc, Mutex,
+    },
 };
 
 mod motor;
-use motor::Motor;
+use motor::{DummyMotor, GenericMotor, Motor};
 
 pub struct Car {
-    drive_motor: Arc<Mutex<Motor>>,
-    turn_motor: Arc<Mutex<Motor>>,
+    drive_motor: Arc<Mutex<dyn GenericMotor>>,
+    turn_motor: Arc<Mutex<dyn GenericMotor>>,
     pub is_driving: AtomicBool,
 }
 
 impl Car {
     pub fn new() -> Car {
-        Car {
-            drive_motor: Arc::new(Mutex::new(Motor::new(9, 10))),
-            turn_motor: Arc::new(Mutex::new(Motor::new(8, 7))),
-            is_driving: AtomicBool::new(false),
+        let drive_motor = catch_unwind(|| Motor::new(9, 10));
+        let turn_motor = catch_unwind(|| Motor::new(8, 7));
+        match drive_motor {
+            Ok(_) => Car {
+                drive_motor: Arc::new(Mutex::new(drive_motor.unwrap())),
+                turn_motor: Arc::new(Mutex::new(turn_motor.unwrap())),
+                is_driving: AtomicBool::new(false),
+            },
+            Err(_) => Car {
+                drive_motor: Arc::new(Mutex::new(DummyMotor::new())),
+                turn_motor: Arc::new(Mutex::new(DummyMotor::new())),
+                is_driving: AtomicBool::new(false),
+            },
         }
     }
 

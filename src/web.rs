@@ -2,21 +2,22 @@ use futures_util::{SinkExt, StreamExt, TryFutureExt};
 use serde_json::Value;
 use std::sync::{atomic::Ordering, Arc};
 use warp::ws::{Message, WebSocket};
+use warp::Filter;
 
-use crate::car::Car;
+use crate::{camera::Camera, car::Car};
 
 pub async fn handle_socket(ws: WebSocket, car: Arc<Car>) {
     let (mut tx, mut rx) = ws.split();
 
     while let Some(result) = rx.next().await {
-        let message = match result {
+        let msg = match result {
             Ok(msg) => msg,
             Err(e) => {
                 eprintln!("websocket error: {}", e);
                 break;
             }
         };
-        let msg = match message.to_str() {
+        let msg = match msg.to_str() {
             Ok(msg) => msg,
             Err(e) => {
                 println!("Error converting message to string: {:?}", e);
@@ -68,4 +69,6 @@ async fn handle_data(data: Value, car: &Arc<Car>) {
     };
 }
 
-pub async fn camera_feed() {}
+pub async fn camera_feed(camera: Arc<Camera>) -> Result<impl warp::Reply, warp::Rejection> {
+    return Ok("hello world");
+}
