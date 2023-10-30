@@ -1,7 +1,7 @@
 FROM debian
 
 RUN apt update && apt install -y --no-install-recommends \
-    git curl ca-certificates libopencv-dev libclang-dev clang && \
+    git curl ca-certificates libclang-dev clang && \
     update-alternatives --set c++ /usr/bin/clang++ && \
     update-alternatives --set cc /usr/bin/clang
 
