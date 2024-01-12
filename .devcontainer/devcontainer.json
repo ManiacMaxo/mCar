@@ -5,9 +5,10 @@
             "extensions": [
                 "rust-lang.rust-analyzer",
                 "tamasfe.even-better-toml",
+                "serayuzgur.crates",
                 "ms-azuretools.vscode-docker"
             ]
         }
     },
-    "forwardPorts": [3000]
+    "forwardPorts": [3030]
 }

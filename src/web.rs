@@ -1,13 +1,20 @@
+use std::{borrow::BorrowMut, ops::Deref, sync::Arc};
+
 use axum::{
+    body::Body,
     extract::{
         ws::{Message, WebSocket},
-        WebSocketUpgrade,
+        State, WebSocketUpgrade,
     },
     http::{header, StatusCode, Uri},
     response::{Html, IntoResponse, Response},
 };
+use futures_channel::mpsc::unbounded;
 use rust_embed::RustEmbed;
 use serde::Deserialize;
+use tokio_stream::wrappers::BroadcastStream;
+
+use crate::camera::Camera;
 
 static INDEX_HTML: &str = "index.html";
 
@@ -72,11 +79,7 @@ async fn ws_control(mut socket: WebSocket) {
                 let payload = serde_json::from_slice::<WsPayload>(t.as_bytes());
 
                 match payload {
-                    Ok(payload) => {
-                        println!("{:?}", payload);
-
-                        // socket.send(Message::Text("Ok".to_string())).await.unwrap();
-                    }
+                    Ok(payload) => {}
                     Err(e) => {
                         println!("{:?}", e);
                         socket
@@ -91,6 +94,12 @@ async fn ws_control(mut socket: WebSocket) {
     }
 }
 
-pub async fn cam_feed() -> Response {
-    return (StatusCode::OK, "Hello").into_response();
+pub async fn cam_feed(State(cam): State<Arc<Camera>>) -> Response {
+    let camera = cam.clone();
+    let rx = camera.subscribe();
+    let s = BroadcastStream::new(rx);
+
+    let body = Body::from_stream(s);
+
+    Response::new(body)
 }
