@@ -58,10 +58,10 @@ impl Camera {
         self.tx.subscribe()
     }
 
-    pub fn unsubscribe(self) {
-        {
-            let mut subscribers = self.subscribers.lock().unwrap();
-            *subscribers -= 1;
-        }
-    }
+    // pub fn unsubscribe(self) {
+    //     {
+    //         let mut subscribers = self.subscribers.lock().unwrap();
+    //         *subscribers -= 1;
+    //     }
+    // }
 }

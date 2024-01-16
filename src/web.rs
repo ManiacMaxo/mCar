@@ -1,5 +1,3 @@
-use std::{borrow::BorrowMut, ops::Deref, sync::Arc};
-
 use axum::{
     body::Body,
     extract::{
@@ -9,12 +7,12 @@ use axum::{
     http::{header, StatusCode, Uri},
     response::{Html, IntoResponse, Response},
 };
-use futures_channel::mpsc::unbounded;
 use rust_embed::RustEmbed;
 use serde::Deserialize;
+use std::sync::{Arc, Mutex};
 use tokio_stream::wrappers::BroadcastStream;
 
-use crate::camera::Camera;
+use crate::{camera::Camera, car::Car};
 
 static INDEX_HTML: &str = "index.html";
 
@@ -56,14 +54,14 @@ async fn not_found() -> Response {
     (StatusCode::NOT_FOUND, "404").into_response()
 }
 
-pub async fn ws_handler(ws: WebSocketUpgrade) -> Response {
-    ws.on_upgrade(ws_control)
+pub async fn ws_handler(ws: WebSocketUpgrade, State(car): State<Arc<Mutex<Car>>>) -> Response {
+    ws.on_upgrade(|socket| ws_control(socket, car))
 }
 
 #[derive(Deserialize, Debug)]
 struct WsPayloadData {
-    x: f32,
-    y: f32,
+    x: f64,
+    y: f64,
 }
 
 #[derive(Deserialize, Debug)]
@@ -72,14 +70,26 @@ struct WsPayload {
     data: Option<WsPayloadData>,
 }
 
-async fn ws_control(mut socket: WebSocket) {
+async fn ws_control(mut socket: WebSocket, car: Arc<Mutex<Car>>) {
     while let Some(Ok(msg)) = socket.recv().await {
         match msg {
             Message::Text(ref t) => {
                 let payload = serde_json::from_slice::<WsPayload>(t.as_bytes());
 
                 match payload {
-                    Ok(payload) => {}
+                    Ok(payload) => match payload.event.as_str() {
+                        "drive" => {
+                            let mut car = car.lock().unwrap();
+                            let data = payload.data.unwrap();
+
+                            car.drive(data.x, data.y);
+                        }
+                        "stop" => {
+                            let mut car = car.lock().unwrap();
+                            car.stop();
+                        }
+                        _ => {}
+                    },
                     Err(e) => {
                         println!("{:?}", e);
                         socket

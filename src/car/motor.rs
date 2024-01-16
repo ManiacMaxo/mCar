@@ -134,9 +134,9 @@ impl DummyMotor {
 }
 
 impl GenericMotor for DummyMotor {
-    fn forward(&mut self, speed: f64) {}
+    fn forward(&mut self, _: f64) {}
 
-    fn backward(&mut self, speed: f64) {}
+    fn backward(&mut self, _: f64) {}
 
     fn stop(&mut self) {}
 }

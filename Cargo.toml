@@ -13,4 +13,3 @@ serde_json = "1.0"
 tokio = { version = "1", features = ["full"] }
 tokio-stream = { version = "0.1", features = ["sync"] }
 nokhwa = { version = "0.10", features = ["input-native"] }
-futures-channel = "0.3"
